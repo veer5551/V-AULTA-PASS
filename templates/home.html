@@ -1,0 +1,154 @@
+<!-- Home page of V's V-AULTA PASS using twitter bootstrap-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="A Personal Password Manager">
+    <meta name="author" content="Veer Bhansari">
+    <title>V-AULTA PASS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename="bootstrap/css/bootstrap.min.css") }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='blog.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename="bootstrap/css/bootstrap-theme.min.css") }}" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+        rel="stylesheet" type="text/css" />
+    <style>
+        img#logo {
+          border-radius: 8px;
+        }
+        figure.item {
+            /* To correctly align image, regardless of content height: */
+            border-radius: 8px;
+            position: fixed;
+            bottom: 50px;
+            right: 100px;
+            vertical-align: top;
+            display: inline-block;
+            /* To horizontally center images and caption */
+            text-align: center;
+            /* The width of the container also implies margin around the images. */
+            width: 150px;
+
+        }
+        img#personal {
+            border-radius: 8px;
+            width: 150px;
+            height: 150px;
+            background-color: grey;
+
+        }
+        .caption {
+            /* Make the caption a block so it occupies its own line. */
+            display: block;
+        }
+        form.form-inline{
+          border-radius: 8px;
+          position: fixed;
+          top: 12%;
+          left: 20%;
+          vertical-align: top;
+          display: inline-block;
+            /* To horizontally center images and caption */
+          text-align: center;
+          width: 600px;
+
+        }
+        </style>
+  </head>
+  <body>
+
+      {% if session.logged_in %}
+      <form class="form-inline" action="{{ url_for('search') }}" method=post>
+        <div class="form-group">
+       	   <label class="sr-only" for="inputname">Name</label>
+           <input type="text" class="form-control" id="inputName" placeholder="Website" name="website" style="width: 300px">
+    	</div>
+            <script>
+              $( function() {
+                var availableTags = [
+                    {% for language in languages %}
+                        "{{language}}",
+                    {% endfor %}
+                ];
+                $( "#inputName" ).autocomplete({
+                  source: availableTags
+                });
+              } );
+          </script>
+        <button type="submit" class="btn btn-primary" name="search" value="SEARCH">Search</button>
+	  </form>
+      {% endif %}
+    <div class="container">
+    <div navbar-header>
+
+      <div class="container">
+          <img class="logo" id="logo" src="{{url_for('static', filename='logo.jpg')}}">
+        <!--<h1 href="https://fontmeme.com/calligraphy-fonts/">
+            <img src="https://fontmeme.com/permalink/210808/d27ce2576c1f21d0fb1b17ba75df64be.png" alt="calligraphy-fonts" border="0" style="margin-right: 20px">
+            <h3 class="first-txt">BY:</h3>
+            <img class="image" id="personal2" src="{{url_for('static', filename='fb.jpg')}}" width="150" height="150" style="margin-left: 30px">-->
+          </h1>
+
+        <nav class="navbar navbar-default  navbar-fixed-top" data-spy="affix"  id="navbar">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="{{ url_for('home') }}">HOME</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="{{ url_for('add') }}">ADD</a></li>
+            <li><a href="{{ url_for('view') }}">VIEW</a></li>
+            <li><a href="{{ url_for('search') }}">SEARCH</a></li>
+            <li><a href="{{ url_for('delete') }}">DELETE</a></li>
+            <li><a href="{{ url_for('update') }}">UPDATE</a></li>
+
+          </ul>
+          <form class="navbar-form navbar-right"  action="{{ url_for('home') }}" method=post >
+            {% if not session.logged_in %}
+            <button type="submit" class="btn btn-default" name="opt"  value="LOGIN">LOGIN</button>
+            {% else %}
+            <button type="submit" class="btn btn-default" name="opt"  value="LOGOUT">LOG OUT</button>
+            {% endif %}
+          </form>
+        </div><!-- /.navbar-collapse -->
+        </nav><!-- /.container-fluid -->
+      </div>  
+      </div navbar-header>
+      <br>
+      <br>
+      <div class="hero-unit">
+        <h2>Passowrd Management made Easy!!!</h2>
+        <p>V-AULTA PASS is a Personal Password Manager Hosted on local server!</p>
+
+        {% if session.logged_in %}
+          <p>You are Logged in!</p>
+        {% endif %}
+
+        {% if not session.logged_in %}
+            <p>Log in First to get Complete Access!</p>
+             <a href="{{ url_for('login') }}" class="btn btn-large btn-success">LOG IN</a><br><br>
+         {% endif %}
+      </div>
+      {% for message in get_flashed_messages() %}
+      <br>
+      <div class="alert alert-info">
+        <a href="/" class="close" data-dismiss="alert">&times;</a><br>
+        <strong>Note!</strong>{{message}}
+      </div>
+      {% endfor %}
+
+      <figure class="item">
+          <figcaption class="caption">BY</figcaption>
+          <img class="personal" id="personal" src="{{url_for('static', filename='fb.jpg')}}"/>
+      </figure>
+
+    </div>
+    <script src="{{ url_for('static', filename="bootstrap/js/bootstrap.min.js") }}""></script>
+
+  </body>
+</html>
